@@ -1,0 +1,34 @@
+[project]
+name = "vivcpy"
+version = "0.1.0"
+authors = [
+  { name="Paul Petersik-Einöder", email="paul.petersik@gmail.com" },
+]
+description = "Connector to the database of the Vitis International Variety Catalogue (VIVC)."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "beautifulsoup4",
+    "requests"
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "mypy",
+    "types-requests",
+]
+
+[project.urls]
+Homepage = "https://github.com/VineForecast/vivcpy"
+Issues = "https://github.com/VineForecast/vivcpy/issues"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
