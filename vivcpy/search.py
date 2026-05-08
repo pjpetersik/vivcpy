@@ -20,7 +20,7 @@ BASE_URL = "https://www.vivc.de/index.php"
 
 
 def enum_or_none(raw_str: str, enum_class: type[E]) -> E | None:
-    return enum_class(raw_str) if raw_str else None
+    return enum_class(raw_str.strip()) if raw_str else None
 
 
 SEARCH_PARAMS_KEY_MAP: dict[str, str] = {
