@@ -1,4 +1,5 @@
 import requests
+import time
 
 from bs4 import BeautifulSoup
 from dataclasses import dataclass, fields
@@ -136,6 +137,7 @@ class PassportDataSearch:
         """Yield varieties across all result pages."""
         # first page
         response = requests.get(BASE_URL, params=self.url_params(page=1))
+        response.raise_for_status()
         soup = BeautifulSoup(response.content, "html.parser")
         yield from self._parse_varieties(soup)
 
@@ -154,6 +156,8 @@ class PassportDataSearch:
             n_pages = int(data_page) + 1
 
             for page in range(2, n_pages + 1):
+                time.sleep(3)  # wait 3 seconds before the next request
                 response = requests.get(BASE_URL, params=self.url_params(page=page))
+                response.raise_for_status()
                 soup = BeautifulSoup(response.content, "html.parser")
                 yield from self._parse_varieties(soup)
