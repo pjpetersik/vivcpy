@@ -7,7 +7,11 @@ These tests are not part of the standard test suite and must be run explicitly::
 
 from unittest import TestCase
 
-from vivcpy.search import PassportDataSearch, PassportDataSearchParams
+from vivcpy.search import (
+    PassportDataViewSearch,
+    PassportDataSearch,
+    PassportDataSearchParams,
+)
 from vivcpy.enums import ColorOfBerrySkin, CountryOrRegion, Species
 
 
@@ -35,3 +39,21 @@ class TestPassportDataSearch(TestCase):
         )
         varieties = list(PassportDataSearch(params))
         self.assertEqual(len(varieties), 981)
+
+    def test_search_with_details(self):
+        params = PassportDataSearchParams(
+            species=Species.VITIS_VINIFERA_SUBSP_SATIVA,
+            country_or_region_of_origin_of_the_variety=CountryOrRegion.DEU,
+        )
+        varieties = list(PassportDataSearch(params, details=True))
+        self.assertEqual(len(varieties), 1)
+        variety = varieties[0]
+
+
+class TestPassportDataViewSearch(TestCase):
+    def test_search_by_id(self):
+        search = PassportDataViewSearch(variety_number_vivc=4572)
+        variety = search.get_variety()
+        self.assertIn("Ren3", variety.loci_for_resistance)
+        self.assertIn("Ren9", variety.loci_for_resistance)
+        self.assertIn("Rpv3.1", variety.loci_for_resistance)

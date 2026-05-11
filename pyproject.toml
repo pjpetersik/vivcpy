@@ -1,6 +1,6 @@
 [project]
 name = "vivcpy"
-version = "0.2.0"
+version = "0.3.1"
 authors = [
   { name="Paul Petersik-Einöder", email="paul.petersik@gmail.com" },
 ]

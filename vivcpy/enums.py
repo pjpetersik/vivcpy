@@ -148,15 +148,10 @@ class CountryOrRegion(StandardSearchValueEnum):
     YUG = "YUGOSLAVIA"
 
 
-class Utilization(StandardSearchValueEnum):
-    @property
-    def search_value(self) -> str:
-        return super().search_value.replace("_", "+")
-
-    WINE_GRAPE = "WINE GRAPE"
-    TABLE_GRAPE = "TABLE GRAPE"
-    RAISIN_GRAPE = "RAISIN GRAPE"
-    ROOTSTOCK = "ROOTSTOCK"
+class FormationOfSeeds(StandardSearchValueEnum):
+    COMPLETE = "COMPLETE"
+    RUDIMENTARY = "RUDIMENTARY"
+    NONE = "NONE"
 
 
 class Species(SearchValueEnum):
@@ -294,3 +289,20 @@ class Species(SearchValueEnum):
     VITIS_YESHANENSIS = ("30", "VITIS YESHANENSIS CHEN")
     VITIS_YUNNANENSIS = ("134", "VITIS YUNNANENSIS C.L.LI")
     VITIS_INTERGENERIC_CROSSING = ("123", "VITIS INTERGENERIC CROSSING")
+
+
+class SexOfFlowers(StandardSearchValueEnum):
+    MALE = "MALE"
+    HERMAPHRODITE = "HERMAPHRODITE"
+    FEMALE = "FEMALE"
+
+
+class Utilization(StandardSearchValueEnum):
+    @property
+    def search_value(self) -> str:
+        return super().search_value.replace("_", "+")
+
+    WINE_GRAPE = "WINE GRAPE"
+    TABLE_GRAPE = "TABLE GRAPE"
+    RAISIN_GRAPE = "RAISIN GRAPE"
+    ROOTSTOCK = "ROOTSTOCK"

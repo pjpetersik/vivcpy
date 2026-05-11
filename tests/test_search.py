@@ -17,6 +17,7 @@ class TestPassportDataSearchParams(TestCase):
                 "PassportSearch[country][]": None,
                 "PassportSearch[utilization2][]": None,
                 "PassportSearch[gattung_id2][]": None,
+                "PassportSearch[samenausbildungs][]": None,
             },
         )
 
