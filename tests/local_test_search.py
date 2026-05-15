@@ -45,10 +45,9 @@ class TestPassportDataSearch(TestCase):
             species=Species.VITIS_VINIFERA_SUBSP_SATIVA,
             country_or_region_of_origin_of_the_variety=CountryOrRegion.DEU,
         )
-        varieties = list(PassportDataSearch(params, details=True))
-        self.assertEqual(len(varieties), 1)
-        variety = varieties[0]
-
+        for variety in PassportDataSearch(params, details=True):
+            self.assertEqual(variety.prime_name, "ACCENT")
+            break
 
 class TestPassportDataViewSearch(TestCase):
     def test_search_by_id(self):

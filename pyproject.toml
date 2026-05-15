@@ -1,10 +1,10 @@
 [project]
 name = "vivcpy"
-version = "0.3.1"
+version = "0.4.0"
 authors = [
   { name="Paul Petersik-Einöder", email="paul.petersik@gmail.com" },
 ]
-description = "Connector to the database of the Vitis International Variety Catalogue (VIVC)."
+description = "Python package to retrieve passport data from the Vitis International Variety Catalogue (VIVC)."
 readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [

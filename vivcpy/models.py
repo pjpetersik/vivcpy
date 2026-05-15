@@ -38,6 +38,8 @@ class Variety:
 
     utilization: Optional[list[Utilization]] = None
 
+    synonyms: Optional[list[str]] = None
+
     def __and__(self, other: "Variety") -> "Variety":
         """Merge two varieties, keeping self's values where set and falling back to other's."""
         if (

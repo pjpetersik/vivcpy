@@ -188,7 +188,6 @@ class PassportDataSearch:
                     variety.variety_number_vivc
                 ).get_variety()
                 variety = detail_variety & variety
-                print(variety)
             yield variety
 
 
@@ -220,7 +219,8 @@ class PassportDataViewSearch:
         }
 
     def _parse_variety(self, soup: BeautifulSoup) -> Variety:
-        td_tags = soup.find_all("table")[0].find_all("td")
+        tables = soup.find_all("table")
+        td_tags = tables[0].find_all("td")
 
         variety_number_vivc = int(td_tags[2].text)
         if variety_number_vivc != self.variety_number_vivc:
@@ -242,6 +242,17 @@ class PassportDataViewSearch:
         loci_for_resistance = (
             loci_for_resistance_str.split("\n") if loci_for_resistance_str else None
         )
+
+        synonym_table = next(
+            (
+                table
+                for table in tables
+                if (thead := table.find("thead"))
+                and thead.text.strip().startswith("Synonyms")
+            ),
+            None,
+        )
+        synonyms = [td.text for td in synonym_table.find_all("td")] if synonym_table else None
 
         return Variety(
             prime_name=td_tags[0].text.strip(),
@@ -269,4 +280,5 @@ class PassportDataViewSearch:
             taste=empty_string_to_none(td_tags[21].text),
             chlorotype=empty_string_to_none(td_tags[22].text),
             loci_for_resistance=loci_for_resistance,
+            synonyms=synonyms
         )
