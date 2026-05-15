@@ -243,7 +243,7 @@ class PassportDataViewSearch:
             loci_for_resistance_str.split("\n") if loci_for_resistance_str else None
         )
 
-        synonym_table = next(
+        synonyms_table = next(
             (
                 table
                 for table in tables
@@ -252,7 +252,11 @@ class PassportDataViewSearch:
             ),
             None,
         )
-        synonyms = [td.text for td in synonym_table.find_all("td")] if synonym_table else None
+        synonyms = (
+            [td.text for td in synonyms_table.find_all("td")]
+            if synonyms_table
+            else None
+        )
 
         return Variety(
             prime_name=td_tags[0].text.strip(),
@@ -280,5 +284,5 @@ class PassportDataViewSearch:
             taste=empty_string_to_none(td_tags[21].text),
             chlorotype=empty_string_to_none(td_tags[22].text),
             loci_for_resistance=loci_for_resistance,
-            synonyms=synonyms
+            synonyms=synonyms,
         )

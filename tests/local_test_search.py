@@ -49,6 +49,7 @@ class TestPassportDataSearch(TestCase):
             self.assertEqual(variety.prime_name, "ACCENT")
             break
 
+
 class TestPassportDataViewSearch(TestCase):
     def test_search_by_id(self):
         search = PassportDataViewSearch(variety_number_vivc=4572)
