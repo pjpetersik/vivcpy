@@ -38,7 +38,7 @@ class TestPassportDataSearch(TestCase):
             species=Species.VITIS_VINIFERA_SUBSP_SATIVA,
         )
         varieties = list(PassportDataSearch(params))
-        self.assertEqual(len(varieties), 981)
+        self.assertEqual(len(varieties), 982)
 
     def test_search_with_details(self):
         params = PassportDataSearchParams(
@@ -48,6 +48,15 @@ class TestPassportDataSearch(TestCase):
         for variety in PassportDataSearch(params, details=True):
             self.assertEqual(variety.prime_name, "ACCENT")
             break
+
+    def test_search_not_existing_variety_vivc_number(self):
+        params = PassportDataSearchParams(variety_number_vivc=99999)
+        varieties = list(PassportDataSearch(params))
+        self.assertEqual(len(varieties), 0)
+
+        params = PassportDataSearchParams(variety_number_vivc=-1)
+        varieties = list(PassportDataSearch(params))
+        self.assertEqual(len(varieties), 0)
 
 
 class TestPassportDataViewSearch(TestCase):

@@ -129,7 +129,7 @@ class PassportDataSearch:
             n_pages = int(data_page) + 1
 
             for page in range(2, n_pages + 1):
-                self._get_soup(page)
+                soup = self._get_soup(page)
                 yield from self._parse_varieties(soup)
 
     def _get_soup(self, page: int) -> BeautifulSoup:
@@ -154,11 +154,20 @@ class PassportDataSearch:
         """Extract Variety objects from a parsed results page."""
         rows = soup.find_all("table")[0].find_all("tr")[3:]
 
-        if rows[0].text == "No results found.":
-            raise StopIteration
+        if rows[0].text.strip() in ["No results found.", ""]:
+            return
 
         for row in rows:
             td_tags = row.find_all("td")
+            try:
+                raw_variety_number_vivc = td_tags[2].text.strip()
+                variety_number_vivc = int(raw_variety_number_vivc)
+            except ValueError:
+                msg = (
+                    "VIVC number could not be parsed into an integer, "
+                    f"got: {raw_variety_number_vivc}"
+                )
+                raise ValueError(msg)
 
             a_tags_utilization = td_tags[3].find_all("a")
             utilization_list = [Utilization(a_tag.text) for a_tag in a_tags_utilization]
@@ -172,7 +181,7 @@ class PassportDataSearch:
             variety = Variety(
                 prime_name=td_tags[0].text,
                 color_of_berry_skin=enum_or_none(td_tags[1].text, ColorOfBerrySkin),
-                variety_number_vivc=int(td_tags[2].text),
+                variety_number_vivc=variety_number_vivc,
                 utilization=utilization,
                 country_or_region_of_origin_of_the_variety=enum_or_none(
                     td_tags[4].text, CountryOrRegion
