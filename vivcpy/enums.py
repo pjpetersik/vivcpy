@@ -1,4 +1,4 @@
-"""The names of the Enums correspond to URL parameter codes used by the VIVC API,
+"""The names of the Enums correspond to URL parameter codes used by the VIVC database,
 and values are human-readable display names."""
 
 from enum import Enum
@@ -11,7 +11,7 @@ class BaseSearchValueEnum(Enum):
 
 
 class StandardSearchValueEnum(BaseSearchValueEnum):
-    """Base class for enums whose API search value is derived from the member name.
+    """Base class for enums whose VIVC database search value is derived from the member name.
 
     The search value is the lowercase version of the member name, e.g.
     ``ColorOfBerrySkin.GREEN.search_value == "green"``.
@@ -23,10 +23,10 @@ class StandardSearchValueEnum(BaseSearchValueEnum):
 
 
 class SearchValueEnum(BaseSearchValueEnum):
-    """Base class for enums where the API search value differs from the member name.
+    """Base class for enums where the VIVC database search value differs from the member name.
 
     Each member is defined as a ``(search_value, display_name)`` tuple, where
-    ``search_value`` is the opaque identifier sent to the VIVC API and
+    ``search_value`` is the opaque identifier sent to the VIVC database and
     ``display_name`` is the human-readable label stored as ``.value``, e.g.::
 
         Species.VITIS_RIPARIA.search_value  # "7"

@@ -43,9 +43,10 @@ class TestStandardSearchValueEnum(TestCase):
 
 
 class TestSearchValueEnum(TestCase):
-    """Tests for enums inheriting from SearchValueEnum (explicit API id + display name)."""
+    """Tests for enums inheriting from SearchValueEnum (explicit
+    VIVC database id + display name)."""
 
-    def test_search_value_is_explicit_api_id(self):
+    def test_search_value_is_explicit_vivc_database_id(self):
         self.assertEqual(Species.VITIS_RIPARIA.search_value, "7")
         self.assertEqual(Species.VITIS_LABRUSCA.search_value, "2")
         self.assertEqual(Species.VITIS_RUPESTRIS.search_value, "14")
