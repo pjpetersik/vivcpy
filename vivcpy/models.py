@@ -1,3 +1,5 @@
+import logging
+
 from dataclasses import dataclass, fields
 from typing import Optional
 
@@ -42,22 +44,25 @@ class Variety:
 
     def __and__(self, other: "Variety") -> "Variety":
         """Merge two varieties, keeping self's values where set and falling back to other's."""
-        if (
-            self.prime_name != other.prime_name
-            or self.variety_number_vivc != other.variety_number_vivc
-        ):
-            raise ValueError(
-                f"Cannot merge varieties with different identity: "
-                f"'{self.prime_name}' ({self.variety_number_vivc}) vs "
-                f"'{other.prime_name}' ({other.variety_number_vivc})"
-            )
-        return Variety(
-            **{
-                f.name: (
-                    getattr(self, f.name)
-                    if getattr(self, f.name) is not None
-                    else getattr(other, f.name)
-                )
-                for f in fields(self)
-            }
-        )
+        variety_dict = {}
+
+        for f in fields(self):
+            value = getattr(self, f.name)
+            other_value = getattr(other, f.name)
+
+            if value and other_value and value != other_value:
+                if f.name in ["prime_name", "variety_number_vivc"]:
+                    msg = (
+                        f"Cannot merge varieties with different values for "
+                        f"'{f.name}': '{value}' vs '{other_value}'"
+                    )
+                    raise ValueError(msg)
+                else:
+                    msg = (
+                        f"Got different values for '{f.name}': "
+                        f"'{value}' vs '{other_value}'"
+                    )
+                    logging.warning(msg)
+
+            variety_dict[f.name] = value if value else other_value
+        return Variety(**variety_dict)

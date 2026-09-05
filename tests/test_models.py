@@ -1,5 +1,5 @@
 from unittest import TestCase
-
+from unittest.mock import patch
 from vivcpy.enums import ColorOfBerrySkin, Species
 from vivcpy.models import Variety
 
@@ -11,12 +11,14 @@ class TestVarietyAnd(TestCase):
         defaults = {"prime_name": "RIESLING", "variety_number_vivc": 10077}
         return Variety(**{**defaults, **kwargs})
 
-    def test_self_values_take_precedence(self):
+    @patch("vivcpy.models.logging.warning")
+    def test_self_values_take_precedence(self, mock_logging):
         a = self._make_variety(breeder="Alice", taste="sweet")
         b = self._make_variety(breeder="Bob", taste="dry")
         result = a & b
         self.assertEqual(result.breeder, "Alice")
         self.assertEqual(result.taste, "sweet")
+        self.assertEqual(mock_logging.call_count, 2)
 
     def test_falls_back_to_other_when_none(self):
         a = self._make_variety(breeder=None, taste=None)
