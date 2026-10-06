@@ -1,7 +1,10 @@
 from unittest import TestCase
 
+from bs4 import BeautifulSoup
+
 from vivcpy.enums import ColorOfBerrySkin
-from vivcpy.search import PassportDataSearchParams
+from vivcpy.models import Variety
+from vivcpy.search import PassportDataSearchParams, PassportDataViewSearch
 
 
 class TestPassportDataSearchParams(TestCase):
@@ -68,3 +71,54 @@ class TestPassportDataSearchParams(TestCase):
         params = PassportDataSearchParams(color_of_berry_skin=[])
         result = params.to_requests_params()
         self.assertEqual(result["PassportSearch[color][]"], [])
+
+
+MAIN_TABLE_TD_COUNT = 26
+
+
+def passport_main_table_html() -> str:
+    """Build a minimal passport detail table accepted by ``_parse_variety``."""
+    cells = [""] * MAIN_TABLE_TD_COUNT
+    cells[0] = "TESTVINE"
+    cells[2] = "4572"
+    return (
+        "<table><tr>" + "".join(f"<td>{cell}</td>" for cell in cells) + "</tr></table>"
+    )
+
+
+def synonyms_table_html(names: list[str]) -> str:
+    """Build the VIVC synonyms table, whose cells are nested in a wrapper cell."""
+    inner = "".join(f"<td>{name}</td>" for name in names)
+    return (
+        f"<table><thead><tr><th>Synonyms: {len(names)}</th></tr></thead><tbody>"
+        f'<tr><td class="w5"><table><tr></tr><tr>{inner}</tr></table></td></tr>'
+        "</tbody></table>"
+    )
+
+
+class TestPassportDataViewSynonyms(TestCase):
+    """Regression tests for the passport view synonyms table."""
+
+    def _parse_variety(self, synonyms_html: str) -> Variety:
+        soup = BeautifulSoup(passport_main_table_html() + synonyms_html, "html.parser")
+        return PassportDataViewSearch(4572)._parse_variety(soup)
+
+    def test_multiple_synonyms_exclude_wrapper_concatenation(self):
+        variety = self._parse_variety(
+            synonyms_table_html(["MERLAU BLANC", "MERLAUT BLANC", "MERLOT BIANCO"])
+        )
+        self.assertEqual(
+            variety.synonyms, ["MERLAU BLANC", "MERLAUT BLANC", "MERLOT BIANCO"]
+        )
+
+    def test_single_synonym_is_not_duplicated(self):
+        variety = self._parse_variety(synonyms_table_html(["BLAUER TRAMINER"]))
+        self.assertEqual(variety.synonyms, ["BLAUER TRAMINER"])
+
+    def test_no_synonyms_returns_none(self):
+        variety = self._parse_variety(synonyms_table_html([]))
+        self.assertIsNone(variety.synonyms)
+
+    def test_missing_synonyms_table_returns_none(self):
+        variety = self._parse_variety("")
+        self.assertIsNone(variety.synonyms)

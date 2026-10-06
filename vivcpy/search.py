@@ -261,11 +261,18 @@ class PassportDataViewSearch:
             ),
             None,
         )
-        synonyms = (
-            [td.text for td in synonyms_table.find_all("td")]
-            if synonyms_table
-            else None
-        )
+        synonyms: Optional[list[str]] = None
+        if synonyms_table is not None:
+            # The synonyms table nests its cells inside a wrapper cell whose
+            # text is every synonym concatenated. Skip wrapper cells (the ones
+            # holding a nested table) so the concatenation is not parsed as a
+            # single bogus synonym.
+            names = [
+                td.get_text(strip=True)
+                for td in synonyms_table.find_all("td")
+                if not td.find("table")
+            ]
+            synonyms = [name for name in names if name] or None
 
         return Variety(
             prime_name=td_tags[0].text.strip(),
