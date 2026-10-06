@@ -1,6 +1,6 @@
 [project]
 name = "vivcpy"
-version = "0.4.1"
+version = "0.5.0"
 authors = [
   { name="Paul Petersik-Einöder", email="paul.petersik@gmail.com" },
 ]
@@ -17,6 +17,10 @@ dependencies = [
     "beautifulsoup4",
     "requests"
 ]
+
+[project.scripts]
+vivc = "vivcpy.cli:main"
+vivcpy = "vivcpy.cli:main"
 
 [project.optional-dependencies]
 dev = [
